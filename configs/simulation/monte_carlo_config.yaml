@@ -1,0 +1,35 @@
+# Define feature shift ranges:
+feature_shift_params:
+  beta_shift: # Only used in "conditional" and "all" shifts
+    min: -2
+    max: 2
+  intercept_shift: # Only used in "covariate" and "all" shifts
+    min: -2.0
+    max: 2.0
+  noise_std_scale: # Always applied, but for "covariate" shifts, the min-max-delta to 1 is equalized
+    min: 0.5 
+    max: 1.5
+  skewness_shift: # Only used in "conditional" and "all" shifts
+    min: -0.5
+    max: 0.4
+
+# Define RR shift ranges:
+recovery_rate_shift_params:
+  secured_p:
+    min: 0.45
+    max: 0.85
+  secured_peak:
+    mean:
+      min: 0.5
+      max: 0.85
+    std:
+      min: 0.05
+      max: 0.25
+  unsecured_peak:
+    mean:
+      min: 0.0
+      max: 0.4
+    std:
+      min: 0.03
+      max: 0.2
+
