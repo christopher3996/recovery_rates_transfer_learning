@@ -19,7 +19,7 @@ The repository supports two main experimental settings:
 2. **Real-World Transfer Learning**  
    Transfer from a loans dataset (Global Credit Data, GCD) to a bonds dataset (UP5), evaluating model performance under realistic feature heterogeneity and data scarcity.
 
-The implementation focuses on reproducibility and modularity, with YAML-based configuration files and a unified experiment runner.
+The implementation focuses on reproducibility and modularity, with YAML-based configuration files and notebook-based experiment workflows.
 
 ---
 
@@ -44,7 +44,9 @@ recovery_rates_transfer_learning-main/
 │   │   └── shifted_data.py
 │   ├── models/
 │   │   ├── ft_mdn_transformer.py
-│   │   ├── baselines.py
+│   │   ├── pytorch_model.py
+│   │   ├── random_forest_model.py
+│   │   ├── xgb_model_hetero.py
 │   │   └── archive/
 │   └── utils/
 └── README.md
@@ -66,6 +68,8 @@ The code is written in Python 3.9+ and relies on standard scientific and deep le
 - numpy
 - pandas
 - scikit-learn
+- scipy
+- xgboost
 - torch
 - pyyaml
 - matplotlib / seaborn
@@ -78,10 +82,8 @@ Example:
 ```bash
 python -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip install numpy pandas scikit-learn scipy xgboost torch pyyaml matplotlib seaborn jupyter
 ```
-
-*(If no `requirements.txt` is provided, please install the above packages manually.)*
 
 ---
 
@@ -115,12 +117,12 @@ The Monte Carlo simulation experiments can be fully reproduced without proprieta
 
 3. Outputs (metrics, logs, plots) will be written to:
    ```
-   outputs/
+   outputs/sim_runs/
    ```
 
 ### Real-World Transfer Learning
 
-Due to data restrictions, full reproduction requires access to GCD and UP5. After placing the datasets in the appropriate locations and updating data paths, the real-world experiments can be run analogously via `src/main.py` or through the provided notebooks.
+Due to data restrictions, full reproduction requires access to GCD and UP5. After placing the datasets in the appropriate locations and updating data paths, the real-world experiments can be run through the provided notebooks.
 
 Relevant notebooks:
 
