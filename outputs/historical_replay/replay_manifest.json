@@ -1,0 +1,32 @@
+{
+  "hash_seed": "0",
+  "python": "3.9.19",
+  "threads": 1,
+  "device": "cpu",
+  "packages": {
+    "numpy": "1.24.4",
+    "pandas": "1.4.4",
+    "torch": "2.6.0",
+    "scipy": "1.9.1",
+    "xgboost": "2.1.4",
+    "scikit-learn": "1.6.0"
+  },
+  "sweep_sha256": "2b46c24e3696d89fbd28b6cf67705b29faaad85639cc22c172c063953979c8b7",
+  "files": {
+    "src/models/DEPRECATED_ft_transformer_mdn_transfer.py": "10912a6c1b553820e94ff3afb94a655192a4c26fbbdf29b55cb969f353e8391b",
+    "src/models/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/models/base_model.py": "6f7849a19f74d4b6e47d2087120c40db6c4a0c7a90979a1751b250584ff5ea18",
+    "src/models/ft_mdn_transformer.py": "e88cc96f0cad1c82ace5be13670f2dd2346ae9fb563ba05358dfba9a6205d49b",
+    "src/models/pytorch_model.py": "c91654f44f0d68c31a11b208e5b1d1231cae096a673cf85385a6fe820454dfd8",
+    "src/models/random_forest_model.py": "e45d065a0a734d0137fbc0456a82f2b4c7bc5666afab5648bc6bcd902f94454b",
+    "src/models/xgb_model_hetero.py": "e91d3eb27fbf3f5bd14d5fd3143ceb8a7cf8844215622d457ef14e016efd24ff",
+    "src/utils/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/utils/seed.py": "660134eefd4f7f08baaaee6f4bd526645233fdada633a9ee503cb1c6408fead8",
+    "src/data_generation/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/data_generation/shifted_data.py": "5b3cdea20986dae06628a3a06e45fd155a86f45dfabd26ee762242b2d928fbff",
+    "src/data_generation/source_data.py": "041697ce31ef4faafb62d352e179a1818d12c2250298d5cd27da58cc236b52c6",
+    "configs/simulation/monte_carlo_config.yaml": "2f27dc9da916b6453262eb87ff81a2b35eaebfb08dcea742e0f732b94a95d56d",
+    "configs/simulation/source_data_config_categories.yaml": "3a21a81caed795a008d0337815980e9bc3b25b7e8ed12b6cc12548c4dd44f373"
+  },
+  "runner_sha256": "25a37bd55ef81864959977340e1c3be1198147aa977f174d49b07212a16c8e28"
+}

@@ -1,8 +1,40 @@
-data/UP5/
+/data/*
+!/data/place_data_here
+/notebooks/archive/transfer_density_audit.ipynb
 
 /outputs/*
 !/outputs/place_for_outputs
 
+
+# Synthetic inputs used by the review notebook. Keep rebuilds and portfolio data local.
+!/outputs/simulation_revision_v1/
+/outputs/simulation_revision_v1/*
+!/outputs/simulation_revision_v1/????????????????????.json
+!/outputs/simulation_sensitivity_80/
+/outputs/simulation_sensitivity_80/*
+!/outputs/simulation_sensitivity_80/????????????????????.json
+!/outputs/historical_replay/
+/outputs/historical_replay/*
+!/outputs/historical_replay/replay_manifest.json
+!/outputs/historical_replay/results/
+/outputs/historical_replay/results/*
+!/outputs/historical_replay/results/index.csv
+!/outputs/historical_replay/results/raw_*_s0-4.csv
+!/outputs/historical_replay/results/summary_*_s0-4.csv
+!/outputs/simulation_paper/
+/outputs/simulation_paper/*
+!/outputs/simulation_paper/final/
+/outputs/simulation_paper/final/*
+!/outputs/simulation_paper/final/augmentation_runs.csv
+!/outputs/simulation_paper/final/augmentation_summary.csv
+!/outputs/simulation_density_confirmation/
+/outputs/simulation_density_confirmation/*/*
+!/outputs/simulation_density_confirmation/*/protocol.json
+!/outputs/simulation_density_confirmation/*/*.npz
+!/outputs/simulation_density_midpoint/
+/outputs/simulation_density_midpoint/*/*
+!/outputs/simulation_density_midpoint/*/protocol.json
+!/outputs/simulation_density_midpoint/*/*.npz
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

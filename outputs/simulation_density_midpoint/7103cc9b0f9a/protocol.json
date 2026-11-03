@@ -1,0 +1,45 @@
+{
+  "assessment_n": 1000,
+  "budgets": [
+    250
+  ],
+  "device": "cpu",
+  "epochs": 160,
+  "intensity": 0.5,
+  "packages": {
+    "PyYAML": "6.0.2",
+    "numpy": "1.24.4",
+    "pandas": "1.4.4",
+    "scikit-learn": "1.6.0",
+    "scipy": "1.9.1",
+    "torch": "2.6.0"
+  },
+  "python": "3.9.19",
+  "reps": [
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "schemas": [
+    "equal",
+    "target_subset"
+  ],
+  "sha256": {
+    "density_confirmation.py": "b616c67c64a044a1b785980197f807081ed90efa3595a7daac1078b301783261",
+    "distribution.py": "3a85a79777017f4f7140c266b5d3bba5fc1202a502bbd1718a84fd4b1c0afeef",
+    "ft_mdn_transformer.py": "e88cc96f0cad1c82ace5be13670f2dd2346ae9fb563ba05358dfba9a6205d49b",
+    "revision.py": "37ffb5f7c834f1d95f74b4af04ab3d8ddfaac7d5eb0a01120b355d49365efcf0",
+    "source_data.py": "041697ce31ef4faafb62d352e179a1818d12c2250298d5cd27da58cc236b52c6",
+    "source_data_config_categories.yaml": "3a21a81caed795a008d0337815980e9bc3b25b7e8ed12b6cc12548c4dd44f373"
+  },
+  "shifts": [
+    "none",
+    "label"
+  ],
+  "source_epochs": 20,
+  "source_n": 1000,
+  "target_validation_fraction": 0.2,
+  "threads": 1
+}

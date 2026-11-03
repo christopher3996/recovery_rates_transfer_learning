@@ -1,0 +1,20 @@
+# Python 3.9.19. Direct dependencies from the Jupyter environment used here.
+# Direct simulation and kernel dependencies from the archived CPU environment, Python 3.9.19.
+numpy==1.24.4
+pandas==1.4.4
+torch==2.6.0
+scipy==1.9.1
+scikit-learn==1.6.0
+xgboost==2.1.4
+tqdm==4.64.1
+PyYAML==6.0.2
+matplotlib==3.5.2
+seaborn==0.11.2
+ipykernel==6.15.2
+IPython==7.31.1
+jinja2==3.1.5
+joblib==1.4.2
+PyMuPDF==1.21.0
+openpyxl==3.1.5
+tabpfn==2.0.3
+notebook==7.3.2
