@@ -1,5 +1,4 @@
-# Python 3.9.19. Direct dependencies from the Jupyter environment used here.
-# Direct simulation and kernel dependencies from the archived CPU environment, Python 3.9.19.
+# Python 3.9.19. Simulation manifest pins and direct UP5/Jupyter dependencies.
 numpy==1.24.4
 pandas==1.4.4
 torch==2.6.0

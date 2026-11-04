@@ -34,7 +34,7 @@ def descriptive(x, y, shared, folder):
     plt.close(fig)
 
 
-def replay(repo, folder):
+def replay(repo, folder, selection="all"):
     """Only selected historical cells are used. The revision benchmark is separate."""
     repo, folder = Path(repo).resolve(), Path(folder).resolve()
     folder.mkdir(parents=True, exist_ok=True)
@@ -47,7 +47,8 @@ def replay(repo, folder):
     x, test, y, truth = up5_helper.load_dataset(repo/"data/UP5", only_36=False)
     native, test_native = map(up5_helper.reconstruct_categories, (x, test))
     shared = [key.rstrip("_") for key in up5_helper.get_36_columns()]
-    descriptive(native, y, shared, folder)
+    if selection != "figure9":
+        descriptive(native, y, shared, folder)
     ns = dict(np=np, pd=pd, plt=plt, FTTransformerModel=FTTransformerModel, folder=folder,
               up5_helper=up5_helper, X_train=x, X_test=test, y_train=y, y_test=truth,
               X_train_reconstructed=native, X_test_reconstructed=test_native,
@@ -61,24 +62,29 @@ def replay(repo, folder):
         exec(compile(source, f"{archive.name}/up5_mdn_ablations:cell{i}", "exec"), ns)
 
     # Historical density illustrations used native columns and validation checkpoints.
-    execute(8, [('sample_df=X_train','sample_df=X_train_reconstructed'),
-                ('X_train[all_cols]', 'X_train_reconstructed'),
-                ('X_test[all_cols]', 'X_test_reconstructed')])
-    execute(10)
-    ns["plot_portfolio_density_side_by_side"](ns["model"],native,y,test_native,truth,
-        y_grid=np.linspace(0,1.1,600),bins=30,title="FT–MDN–T: recovery distributions across UP5 bonds",
-        savepath=folder/"up5_ft_mdn_density_side_by_side.pdf")
-    execute(16, [('mixture+0.04', 'mixture'),
-                 ('f"../figures/mdn_dist_sample_{idx}.pdf"', 'folder / f"mdn_dist_sample_{panel}.pdf"')])
-    for panel, idx in enumerate((57,58,63,89), 1):
-        ns["panel"] = panel
-        ns["plot_mdn_for_sample_styled"](ns["model"],test_native,truth,idx,
-                                         title=f"FT–MDN–T: conditional recovery density (UP5 bond {idx})")
-        plt.close("all")
+    if selection != "figure9":
+        execute(8, [('sample_df=X_train','sample_df=X_train_reconstructed'),
+                    ('X_train[all_cols]', 'X_train_reconstructed'),
+                    ('X_test[all_cols]', 'X_test_reconstructed')])
+        execute(10)
+        ns["plot_portfolio_density_side_by_side"](ns["model"],native,y,test_native,truth,
+            y_grid=np.linspace(0,1.1,600),bins=30,title="FT–MDN–T: recovery distributions across UP5 bonds",
+            savepath=folder/"up5_ft_mdn_density_side_by_side.pdf")
+        execute(16, [('mixture+0.04', 'mixture'),
+                     ('f"../figures/mdn_dist_sample_{idx}.pdf"', 'folder / f"mdn_dist_sample_{panel}.pdf"')])
+        for panel, idx in enumerate((57,58,63,89), 1):
+            ns["panel"] = panel
+            ns["plot_mdn_for_sample_styled"](ns["model"],test_native,truth,idx,
+                                             title=f"FT–MDN–T: conditional recovery density (UP5 bond {idx})")
+            plt.close("all")
 
     execute(48)  # archived parameter dictionaries
     # Save aggregate histories, so plotting again does not repeat the 15-seed fits.
     for cell, variable in [(69,"results_ft_transfer"),(95,"results_with_dummies"),(96,"results_categorical")]:
+        if selection == "other_figures" and cell == 69:
+            continue
+        if selection == "figure9" and cell != 69:
+            continue
         cache = folder/(variable+".json")
         if cache.is_file():
             ns[variable] = json.loads(cache.read_text())
@@ -90,12 +96,16 @@ def replay(repo, folder):
             temp = cache.with_suffix(".tmp")
             temp.write_text(json.dumps(histories,default=lambda v: v.item(),allow_nan=False))
             temp.replace(cache)
-    execute(70, [('f"ft_mdn_transformer_transfer_up5_only_heterogeneous_{up5_helper.timestamp()}.pdf"',
-                  'folder/"ft_mdn_transformer_transfer_up5_only_heterogeneous.pdf"'),
-                 ('Pretrain (36 Features of UP5)','Shared-input pretraining'),
-                 ('Finetune (317 Features of UP5)','Full-input fine-tuning'),
-                 ('FT-MDNTransformer: Heterogeneous Feature Transfer Learning with UP5 only',
-                  'FT–MDN–T: schema expansion within UP5')])
+    if selection != "other_figures":
+        execute(70, [('f"ft_mdn_transformer_transfer_up5_only_heterogeneous_{up5_helper.timestamp()}.pdf"',
+                      'folder/"ft_mdn_transformer_transfer_up5_only_heterogeneous.pdf"'),
+                     ('plt.xlabel("Epoch",', 'plt.xlabel("Epoch within training phase",'),
+                     ('Pretrain (36 Features of UP5)','Shared-input pretraining'),
+                     ('Finetune (317 Features of UP5)','Full-input fine-tuning'),
+                     ('FT-MDNTransformer: Heterogeneous Feature Transfer Learning with UP5 only',
+                      'FT–MDN–T: schema expansion within UP5')])
+    if selection == "figure9":
+        return
     for name in ("with_dummies", "categorical"):
         ns["resulting_values_"+name] = [v["val_r2"] for v in ns["results_"+name]]
     execute(100, [('f"../figures/up5_dummy_vs_category_ft_mdn_comparison_{up5_helper.timestamp()}.pdf"',

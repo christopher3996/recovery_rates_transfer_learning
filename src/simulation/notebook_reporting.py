@@ -39,14 +39,18 @@ def rebuild_panel(config, folder, cap):
 
 
 def show_figure(path):
-    """Display the actual publication PDF as a linked file, with a portable optional preview."""
+    """Show the saved figure inline and provide a link to its full-resolution file."""
     path = Path(path)
     if not path.is_file():
         raise FileNotFoundError(path)
     display(FileLink(os.path.relpath(path)))
+    if path.suffix.lower() in {".png", ".jpg", ".jpeg"}:
+        display(Image(data=path.read_bytes(), width=850))
+        return
     try:
         import fitz
     except ImportError:
+        print("PDF preview requires PyMuPDF. The saved figure is available through the link above.")
         return
     with fitz.open(path) as pdf:
         page = pdf[0]
