@@ -58,7 +58,7 @@ def plot_augmentation(final):
     for row,budget in enumerate((100,500)):
         for ax,schema,title in zip(axes[row],SCHEMAS,SCHEMA_NAMES):
             g=raw.query('budget==@budget and schema==@schema').groupby('shift')
-            for dx,col,color,label in [(-.09,'transfer_r2',BLUE,'FT–MDN–T (pretrained)'),(.09,'augmented_r2',ORANGE,'Augmented ridge')]:
+            for dx,col,color,label in [(-.09,'transfer_r2',BLUE,'FT-MDN-T (pretrained)'),(.09,'augmented_r2',ORANGE,'Augmented ridge')]:
                 series=g[col]
                 ax.errorbar(np.arange(4)+dx,series.mean().loc[list(SHIFTS)],yerr=series.sem().loc[list(SHIFTS)],
                             fmt='o',color=color,capsize=3,label=label)
@@ -82,6 +82,8 @@ def _legacy_functions(notebook):
         if not any(s in source for s in starts) or not any(s in source for s in
                 ('def plot_transfer_vs_', 'def plot_hetero_transfer_highlight','def plot_ft_mdn_heatmap')):
             continue
+        if 'def plot_ft_mdn_heatmap' in source:
+            source = source.replace("aspect='auto'", "aspect='equal', interpolation='nearest'")
         defs=[node for node in ast.parse(source).body if isinstance(node,ast.FunctionDef)]
         exec(compile(ast.Module(body=defs,type_ignores=[]),str(notebook),'exec'),namespace)
         functions.update({node.name:namespace[node.name] for node in defs})
@@ -90,7 +92,7 @@ def _legacy_functions(notebook):
 
 @mpl.rc_context(rc=PAPER_STYLE)
 def plot_historical(repo, raw_root, destination):
-    """Historical diagnostics only. The original sample-size plotting function is missing."""
+    """Validation diagnostics reconstructed from saved sweep results."""
     repo,root,dest=map(Path,(repo,raw_root,destination))
     index=pd.read_csv(root/'results/index.csv')
     tables=[]
@@ -105,17 +107,18 @@ def plot_historical(repo, raw_root, destination):
     dest.mkdir(parents=True,exist_ok=True)
     keys=['shift_type','hetero','target_n','model_name']
     if 'simulation_id' in raw and raw.duplicated(keys+['simulation_id']).any():
-        raise ValueError('Index contains duplicated historical model/replication rows')
+        raise ValueError('Index contains duplicated validation model/replication rows')
     metrics=['r2_target_only','r2_transfer_learning','mae_target_only','mae_transfer_learning']
     raw.groupby(keys)[metrics].agg(['size','count','mean','sem']).to_csv(dest/'historical_condition_summary.csv')
-    f=_legacy_functions(repo/'notebooks/archive/simulation_final.ipynb')
-    model_labels = {'FT-MDN': 'FT–MDN–T', 'FT-Reg': 'FT–Reg', 'XGB': 'XGBoost', 'MLP': 'MLP'}
+    f=_legacy_functions(repo/'notebooks/supporting/simulation_final.ipynb')
+    model_labels = {'FT-MDN': 'FT-MDN-T', 'FT-Reg': 'FT-Reg', 'XGB': 'XGBoost', 'MLP': 'MLP'}
     display_rows = raw.assign(model_name=raw.model_name.replace(model_labels))
 
     def draw(name, filename, **kwargs):
         # The archived heatmap selects the mixture model by its stored identifier.
         if name == 'plot_ft_mdn_heatmap':
-            fig, _ = f[name](raw, save_path=None, **kwargs)
+            with mpl.rc_context({'axes.grid': False, 'image.interpolation': 'nearest'}):
+                fig, _ = f[name](raw, save_path=None, **kwargs)
             for title in fig.texts:
                 title.set_text(title.get_text().replace('FT-MDN', model_labels['FT-MDN']))
         else:
@@ -133,13 +136,13 @@ def plot_historical(repo, raw_root, destination):
     # Reconstructed, not the unavailable figure-producing function. Keep negative scores visible.
     fig,axes=plt.subplots(1,3,sharey=True,figsize=(10,3.3),constrained_layout=True)
     for ax,schema,title in zip(axes,SCHEMAS,SCHEMA_NAMES):
-        for name,color in [('FT-MDN','#1f77b4'),('FT-Reg','#ff7f0e'),('XGB','#2ca02c'),('MLP','#d62728')]:
+        for name,color in [('FT-MDN',BLUE),('FT-Reg',ORANGE),('XGB','#2ca02c'),('MLP','#d62728')]:
             group=raw[(raw.hetero==schema)&(raw.model_name==name)].groupby('target_n')
             for col,fill in [('r2_target_only','white'),('r2_transfer_learning',color)]:
                 ax.plot(group[col].mean(),marker='o',mfc=fill,color=color,
                         linestyle='none' if fill=='white' else '-',label=model_labels[name] if fill!='white' else None)
         ax.set(xscale='log',title=title,xlabel='Target labels')
-    axes[0].set_ylabel('Historical validation $R^2$')
+    axes[0].set_ylabel('Validation $R^2$')
     axes[-1].legend()
     fig.suptitle('Target-only fits (open markers) and transfer fits (connected markers)')
     for ax in axes:

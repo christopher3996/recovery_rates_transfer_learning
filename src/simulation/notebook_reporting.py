@@ -34,8 +34,8 @@ def rebuild_panel(config, folder, cap):
         for i, (rep, shift, schema, budget) in enumerate(cases, 1):
             row = run_cell(config, folder, rep, shift, schema, budget, target_epochs=cap)
             print(f'[{i:03}/{len(cases)}] rep {rep} | {shift} | {schema} | n={budget} | '
-                  f'FT selected epochs: source {row["source_epoch"]}, scratch {row["scratch"]["epoch"]}, '
-                  f'transfer {row["transfer"]["epoch"]} | XGB scratch and residual scored', flush=True)
+                  f'FT-MDN-T selected epochs: pretraining {row["source_epoch"]}, scratch {row["scratch"]["epoch"]}, '
+                  f'transfer {row["transfer"]["epoch"]} | XGBoost target-only and residual scored', flush=True)
 
 
 def show_figure(path):

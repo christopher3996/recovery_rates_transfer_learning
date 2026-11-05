@@ -1,7 +1,10 @@
-# Historical notebooks
+# Notebook archive
 
-Start with the two paper notebooks one directory above. These files preserve earlier experiments and their source cells. The historical replay uses selected cells from the original simulation and UP5 notebooks. Legacy paths and independent exploratory sections mean that running the entire archive in order is unnecessary. Saved cell outputs have been cleared.
+Earlier exploratory notebooks are retained for provenance. The final paper pipeline
+does not load code from this directory. Use [simulation_paper.ipynb](../simulation_paper.ipynb)
+and [up5_paper.ipynb](../up5_paper.ipynb) to review or rebuild results.
 
-- `simulation_final.ipynb` contains the original simulation workflow.
-- `simulation_final-Copy1.ipynb` preserves the earlier alternate simulation notebook.
-- `up5_mdn_ablations.ipynb` and `up5_helper.py` preserve the empirical workflows and plotting functions.
+Active source notebooks and the UP5 helper now live in
+[../supporting/](../supporting/README.md). The alternate simulation notebook remains
+here as a reference, not an execution entry point. Archived notebooks may retain old
+imports and paths; they are not maintained as runnable paper workflows.

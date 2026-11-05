@@ -12,7 +12,7 @@ def main(repo, destination=None):
     import torch
     repo = Path(repo).resolve()
     torch.set_num_threads(1)
-    notebook = repo/'notebooks/archive/simulation_final.ipynb'
+    notebook = repo/'notebooks/supporting/simulation_final.ipynb'
     source = json.loads(notebook.read_text())['cells']
     stop = next(i for i,c in enumerate(source) if ''.join(c['source']).startswith('## 6) Aggregate'))
     cells = [''.join(c['source']) for c in source[:stop] if c['cell_type']=='code']

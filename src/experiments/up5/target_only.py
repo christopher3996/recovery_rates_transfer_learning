@@ -38,7 +38,7 @@ def run_benchmark(data_dir, output_dir, tabpfn_kwargs=None):
             model.fit(train.iloc[fit], y[fit])
             pred = model.predict(test)
         elif name == 'TabPFN':
-            from models.archive.tabpfn_model import TabPFNRegressorModel
+            from models.baselines.tabpfn_model import TabPFNRegressorModel
             model = TabPFNRegressorModel(random_state=42, **(tabpfn_kwargs or {}))
             model.train(train.iloc[fit], y[fit])
             pred = model.predict(test)

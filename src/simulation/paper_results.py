@@ -12,7 +12,7 @@ from simulation.revision import SCHEMAS, SHIFTS, run_cell
 
 KEY = ['shift', 'schema', 'budget', 'rep']
 MODELS = ('scratch', 'transfer', 'xgb_scratch', 'xgb_residual')
-NAMES = ('FT–MDN–T (scratch)', 'FT–MDN–T (pretrained)', 'XGBoost (target only)', 'XGBoost (residual)')
+NAMES = ('FT-MDN-T (scratch)', 'FT-MDN-T (pretrained)', 'XGBoost (target only)', 'XGBoost (residual)')
 SCHEMA_LABEL = {'equal': 'Same predictors', 'source_subset': 'Fewer source predictors',
                 'target_subset': 'Fewer target predictors'}
 SCHEMA_NAMES = tuple(SCHEMA_LABEL[schema] for schema in SCHEMAS)
@@ -84,11 +84,11 @@ def summarize(raw):
     return table.reset_index()
 
 
-# Figure 14 uses tab10 blue for FT and green for XGB. Open markers
+# Model comparisons use paper blue and orange. Open markers
 # denote scratch fits; filled markers denote transfer or residual fits.
-MODEL_BLUE, GREEN = '#1f77b4', '#2ca02c'  # historical tab10 FT and XGB
-BLUE, ORANGE = '#00376c', '#EF7C00'       # historical source / target palette
-FT_LIGHT, FT_HIGHLIGHT = '#5b89b0', '#004c90'
+MODEL_BLUE, GREEN = '#00376c', '#EF7C00'  # FT-MDN-T and XGBoost
+BLUE, ORANGE = '#00376c', '#EF7C00'       # source / target palette
+FT_LIGHT, FT_HIGHLIGHT = '#5b89b0', '#00376c'
 PAPER_STYLE = {'font.family':'serif', 'font.serif':['Times New Roman','Times','DejaVu Serif'],
                'mathtext.fontset':'stix', 'pdf.fonttype':42, 'ps.fonttype':42,
                'axes.grid':True, 'axes.axisbelow':True, 'grid.linestyle':':',
@@ -131,7 +131,7 @@ def _original_style_panels(raw, table, dest):
             if row==0: ax.set_title(title)
             if row==3: ax.set_xlabel('Target labels')
         axes[row,0].set_ylabel(SHIFT_LABEL[shift]+'\nAssessment $R^2$')
-    fig.suptitle('FT–MDN–T: scratch (open) and pretrained (filled)')
+    fig.suptitle('FT-MDN-T: scratch (open) and pretrained (filled)')
     fig.savefig(dest/'paired_replications.pdf',metadata={'CreationDate':None})
     plt.close(fig)
     # Discrete measured cells only: no interpolation or intensity quartiles.
@@ -140,12 +140,12 @@ def _original_style_panels(raw, table, dest):
     for ax,schema,title in zip(axes,SCHEMAS,SCHEMA_NAMES):
         values = table.query('schema == @schema').pivot(index='shift',columns='budget',values='transfer_r2').loc[list(SHIFTS)]
         ax.grid(False)
-        im=ax.imshow(values,interpolation='nearest',cmap='viridis',vmin=low,vmax=high,aspect='auto')
+        im=ax.imshow(values,interpolation='nearest',cmap='viridis',vmin=low,vmax=high,aspect='equal')
         for (i,j),v in np.ndenumerate(values.to_numpy()):
             ax.text(j,i,f'{v:.2f}',ha='center',va='center',color='black' if v>(low+high)/2 else 'white')
         ax.set(title=title,xlabel='Target labels',xticks=[0,1],xticklabels=values.columns,
                yticks=range(4),yticklabels=[SHIFT_LABEL[x] for x in SHIFTS])
-    fig.colorbar(im,ax=axes,label='Pretrained FT–MDN–T: mean assessment $R^2$')
+    fig.colorbar(im,ax=axes,label='Pretrained FT-MDN-T: mean assessment $R^2$')
     fig.savefig(dest/'transfer_heatmap.pdf',metadata={'CreationDate':None})
     plt.close(fig)
 
@@ -164,7 +164,7 @@ def _tables_and_figures(table, dest):
             ax.set_xticks(range(4),[SHIFT_LABEL[x] for x in SHIFTS],rotation=30,ha='right')
             ax.set_title(title)
         axes[0].set_ylabel(label)
-        fig.suptitle('FT–MDN–T: effect of source pretraining')
+        fig.suptitle('FT-MDN-T: effect of source pretraining')
         axes[-1].legend(fontsize=8)
         fig.savefig(dest/f'paired_gain_{metric}.pdf',metadata={'CreationDate':None})
         plt.close(fig)
@@ -236,7 +236,7 @@ def export(config, primary, destination, sensitivity=None):
             ax.set_xlabel('Maximum target training epochs')
             ax.set_title(SCHEMA_LABEL[schema])
         axes[0].set_ylabel('Transfer gain in $R^2$')
-        fig.suptitle('FT–MDN–T: effect of source pretraining')
+        fig.suptitle('FT-MDN-T: effect of source pretraining')
         axes[-1].legend(loc='center left', bbox_to_anchor=(1.01, .5), fontsize=8)
         fig.savefig(dest/'training_sensitivity.pdf',bbox_inches='tight', metadata={'CreationDate':None})
         plt.close(fig)
